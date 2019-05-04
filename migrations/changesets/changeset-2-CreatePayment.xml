@@ -1,0 +1,46 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="2" author="dbobro">
+	<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="public" tableName="payment" />
+            </not>
+	</preConditions>
+
+		<createTable tableName="payment">
+			<column name="id" type="serial" >
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="contract_id" type="integer">
+				<constraints nullable="false"/>
+			</column>
+			<column name="amount" type="double precision">
+				<constraints nullable="false"/>
+			</column>
+		   <column name="date" type="integer">
+				<constraints nullable="false"/>
+			</column>
+			<column name="period" type="timestamp with time zone">
+				<constraints nullable="false"/>
+			</column>
+			<column name="contributor" type="varchar(50)"/>
+			<column name="contragent_id" type="int">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+	<rollback>
+		<dropTable tableName="payment"/>
+	</rollback>
+	
+</changeSet>	
+  
+</databaseChangeLog>
+
+
+

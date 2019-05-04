@@ -1,11 +1,11 @@
 from sanic import Sanic
 from sanic import response
-from serializers import *
+from forms import *
 from payment_service import *
 from sanic.response import text
 import requests
 from sanic.views import HTTPMethodView
-from serializers import PaymentSchema
+from forms import PaymentSchema
 
 app = Sanic()
 

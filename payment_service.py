@@ -1,4 +1,8 @@
-from models import *
+import requests
+from database import payment
+from aiopg.sa import create_engine
+
+contract_ip = "http://0.0.0.0:6000/contract/"
 
 
 async def go():
@@ -50,41 +54,43 @@ async def get_one_contragent(contr_id):
     return raw_data
 
 
-async def get_one_contract(contract_id):
+async def send_request_contracts(contract_id):
+
+    try:
+        r = requests.get(contract_ip + str(contract_id))
+        print(r.status_code)
+        return r.status_code
+    except requests.exceptions.RequestException as err:  # This is the correct syntax
+        # print(err)
+        return 200
+
+
+async def get_contract(contract_number):
+
     engine = await go()
     raw_data = []
     async with engine.acquire() as conn:
-        async for row in conn.execute(payment.select().where(payment.c.contract_id == contract_id)):
+        async for row in conn.execute(payment.select().where(payment.c.contract_id == contract_number)):
             raw_data.append(row)
-            print(row.period)
     return raw_data
 
 
-# POST
-
-
-async def insert_all(json):
+async def create_payment(json):
     engine = await go()
     async with engine.acquire() as conn:
         await conn.execute(payment.insert().values(contributor=json['contributor'], amount=json['amount'],
                                                    period=json['period'], date=json['date'],
-                                                   contragent_id=json['contragent_id'], contract_id=json['contract_id']))
+                                                   contragent_id=json['contragent_id'],
+                                                   contract_id=json['contract_id']))
 
 
-async def update_one(json):
+async def update_payment(json):
     engine = await go()
     async with engine.acquire() as conn:
         await conn.execute(payment.update().
                            where(payment.c.id == json['id']).
                            values(contributor=json['contributor'], amount=json['amount'], period=json['period'],
-                                  date=json['date'], contragent_id=json['contragent_id'], contract_id=json['contract_id']))
+                                  date=json['date'], contragent_id=json['contragent_id'],
+                                  contract_id=json['contract_id']))
 
-
-
-
-
-
-
-
-
-
+s

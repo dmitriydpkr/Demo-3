@@ -3,6 +3,16 @@ from aiopg.sa import create_engine
 import sqlalchemy as sa
 import tzlocal
 
+
+async def go():
+    engine = await create_engine(user='myuser',
+                                 database='dbprod',
+                                 host='127.0.0.1',
+                                 port=5432,
+                                 password='mypass')
+    return engine
+
+
 metadata = sa.MetaData()
 contragent = sa.Table('contragent', metadata,
                       sa.Column('id', sa.Integer, primary_key=True, nullable=False),

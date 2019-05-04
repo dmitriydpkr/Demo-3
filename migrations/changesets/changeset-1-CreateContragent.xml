@@ -6,11 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="1" author="dbobro">
-	<preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists schemaName="public" tableName="contragent" />
-            </not>
-        </preConditions>
+
 	<createTable tableName="contragent">
 
 	    <column name="id" type="serial" >

@@ -9,11 +9,6 @@
 
 
     <changeSet author="dbobro" id="3">
-     <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists schemaName="public" tableName="contract" />
-            </not>
-     </preConditions>
         <createTable tableName="contract">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>

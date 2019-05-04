@@ -1,19 +1,8 @@
 import requests
-from database import payment
-from aiopg.sa import create_engine
+from database import *
+
 
 contract_ip = "http://0.0.0.0:6000/contract/"
-
-
-async def go():
-    engine = await create_engine(user='myuser',
-                                 database='dbprod',
-                                 host='127.0.0.1',
-                                 port=5432,
-                                 password='mypass')
-    return engine
-
-# GET
 
 
 async def get_all_payments():
@@ -93,4 +82,4 @@ async def update_payment(json):
                                   date=json['date'], contragent_id=json['contragent_id'],
                                   contract_id=json['contract_id']))
 
-s
+

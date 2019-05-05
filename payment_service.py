@@ -44,14 +44,11 @@ async def get_one_contragent(contr_id):
 
 
 async def send_request_contracts(contract_id):
-
     try:
         r = requests.get(contract_ip + str(contract_id))
-        print(r.status_code)
         return r.status_code
-    except requests.exceptions.RequestException as err:  # This is the correct syntax
-        # print(err)
-        return 200
+    except requests.exceptions.RequestException as err:
+        print(err)
 
 
 async def get_contract(contract_number):

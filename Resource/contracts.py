@@ -1,5 +1,5 @@
 from sanic import response
-from Resource.payment_service import *
+from Domain.contracts import *
 from sanic.response import text
 from sanic.views import HTTPMethodView
 from forms import PaymentSchema

@@ -5,10 +5,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-   <include file="/home/ukrainer/PycharmProjects/sanic/migrations/changesets/changeset-1-CreateContragent.xml"/>
+   <include file="/home/ukrainer/PycharmProjects/sanic/migrations/changesets/changeset-1-CreateContract.xml"/>
    <include file="/home/ukrainer/PycharmProjects/sanic/migrations/changesets/changeset-2-CreatePayment.xml"/>
-   <include file="/home/ukrainer/PycharmProjects/sanic/migrations/changesets/changeset-3-CreateContract.xml"/>
-   <include file="/home/ukrainer/PycharmProjects/sanic/migrations/changesets/changeset-4-AddFkPayment.xml"/>
-   <include file="/home/ukrainer/PycharmProjects/sanic/migrations/changesets/changeset-5-AddFkContract.xml"/>
 
 </databaseChangeLog>
+
+
+
+
+
+
+

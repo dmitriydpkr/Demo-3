@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, ValidationError, validates
+from marshmallow import Schema, fields, ValidationError, validates, post_dump, post_load
 
 
 def must_not_be_blank(data):
@@ -10,39 +10,31 @@ class PaymentSchema(Schema):
     id = fields.Integer(required=True, validate=must_not_be_blank)
     contributor = fields.String(validate=must_not_be_blank)
     amount = fields.Float(default=0)
-    period = fields.LocalDateTime(validate=must_not_be_blank)
-    date = fields.Integer(default=0)
-    contragent_id = fields.Integer(required=True, validate=must_not_be_blank)
+    date = fields.DateTime(default=0, validate=must_not_be_blank)
+    period = fields.Integer(default=0, validate=must_not_be_blank)
     contract_id = fields.Integer(required=True, validate=must_not_be_blank,
                                  error_meassages={'required': 'Contact ID is required.'})
 
     @validates('amount')
     def validate_amount(self, amount):
-        if amount < 0:
-            raise ValidationError("Only positive numbers")
-
-    @validates('amount')
-    def validate_amount(self, amount):
-        if not int(amount):
-            raise ValidationError("Amount have wrong format. Only integer numbers.")
+        if not float(amount):
+            raise ValidationError("Amount have wrong format. Only whole numbers.")
 
     @validates('contributor')
     def validate_amount(self, contributor):
         if len(contributor) > 30:
             raise ValidationError("Too much symbols")
 
-    class Meta:
-        fields = ("id", "contributor", "amount", "contragent_id", "contract_id", "date")
-        ordered = True
+    @post_load
+    def to_model(self, data):
+        return data
 
 
-class ContragentSchema(Schema):
-    id = fields.Integer(required=True, validate=must_not_be_blank)
-    name = fields.Str(validate=must_not_be_blank)
-    account = fields.Int()
+row = {"id": 25, "contributor": "d9999999", "amount": 31.55, "date": '2019-05-04 05:34:05.287928-04',
+       "period": 1557168899, "contract_id": 22}
 
-    @validates('account')
-    def validate_amount(self, account):
-        if not int(account):
-            raise ValidationError("Account have wrong format. Only integer numbers.")
+try:
+    data = PaymentSchema().load(row)
+except ValidationError as error:
+    print(error)
 

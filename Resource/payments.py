@@ -30,13 +30,17 @@ class PaymentPeriod(HTTPMethodView):
 class PaymentsCreate(HTTPMethodView):
     async def post(self, request):
         await create_payment(request.json)
-        return text('I have done it')
+        return text('I have created payment')
 
 
 class PaymentsUpdate(HTTPMethodView):
-    async def post(self, request):
+    async def put(self, request):
         await update_payment(request.json)
-        return text('I have done it')
+        return text('I have updated payment')
 
 
+class PaymentsDelete(HTTPMethodView):
+    async def delete(self, request):
+        await delete_payment(request.json)
+        return text('I have deleted payment')
 

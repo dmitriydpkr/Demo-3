@@ -13,7 +13,7 @@ app.add_route(PaymentPeriod.as_view(), 'payment/date/<start>/')
 app.add_route(PaymentsContract.as_view(), 'payment/contract/<contract_number>')
 app.add_route(PaymentsCreate.as_view(), '/payment/insert')
 app.add_route(PaymentsUpdate.as_view(), '/payment/update')
-
+app.add_route(PaymentsDelete.as_view(), '/payment/delete')
 
 if __name__ == '__main__':
     registration_sda()

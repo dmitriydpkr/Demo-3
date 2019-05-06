@@ -46,3 +46,8 @@ async def update_payment(json):
                            values(contributor=json['contributor'], amount=json['amount'],  date=json['date'],
                                   contract_id=json['contract_id'], period=json['period']))
 
+
+async def delete_payment(json):
+    engine = await connect_db()
+    async with engine.acquire() as conn:
+        await conn.execute(payment.delete().where(payment.c.id == json['id']))

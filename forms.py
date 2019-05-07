@@ -3,7 +3,7 @@ from marshmallow import Schema, fields, ValidationError, validates, post_dump, p
 
 def must_not_be_blank(data):
     if not data:
-        raise ValidationError('Data not provided.')
+        raise ValidationError("Data not provided.")
 
 
 class PaymentSchema(Schema):
@@ -12,15 +12,18 @@ class PaymentSchema(Schema):
     amount = fields.Float(default=0)
     date = fields.DateTime(default=0, validate=must_not_be_blank)
     period = fields.Integer(default=0, validate=must_not_be_blank)
-    contract_id = fields.UUID(required=True, validate=must_not_be_blank,
-                              error_meassages={'required': 'Contact ID is required.'})
+    contract_id = fields.UUID(
+        required=True,
+        validate=must_not_be_blank,
+        error_meassages={"required": "Contact ID is required."},
+    )
 
-    @validates('amount')
+    @validates("amount")
     def validate_amount(self, amount):
         if not float(amount):
             raise ValidationError("Amount have wrong format. Only whole numbers.")
 
-    @validates('contributor')
+    @validates("contributor")
     def validate_amount(self, contributor):
         if len(contributor) > 30:
             raise ValidationError("Too much symbols")
@@ -30,12 +33,16 @@ class PaymentSchema(Schema):
         return data
 
 
-row = {"id": '00643a49-be89-4c49-8376-6148482ac0bd', "contributor": "d9999999", "amount": 31.55,
-       "date": '2019-05-04 05:34:05.287928-04', "period": 1557168899,
-       "contract_id": '9d2b1d1c-b835-4f8d-9f0a-66d38eb602c0'}
+row = {
+    "id": "00643a49-be89-4c49-8376-6148482ac0bd",
+    "contributor": "d9999999",
+    "amount": 31.55,
+    "date": "2019-05-04 05:34:05.287928-04",
+    "period": 1557168899,
+    "contract_id": "9d2b1d1c-b835-4f8d-9f0a-66d38eb602c0",
+}
 
 try:
     data = PaymentSchema().load(row)
 except ValidationError as error:
     print(error)
-

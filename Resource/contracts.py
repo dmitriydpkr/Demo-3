@@ -14,5 +14,4 @@ class PaymentsContract(HTTPMethodView):
             data = PaymentSchema().dump(payments, many=True)
             return response.json(data)
         else:
-            return text('Contract not founded')
-
+            return text("Contract not founded")

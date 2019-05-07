@@ -18,7 +18,8 @@ async def get_contract(contract_number):
     engine = await connect_db()
     raw_data = []
     async with engine.acquire() as conn:
-        async for row in conn.execute(payment.select().where(payment.c.contract_id == contract_number)):
+        async for row in conn.execute(
+            payment.select().where(payment.c.contract_id == contract_number)
+        ):
             raw_data.append(row)
     return raw_data
-

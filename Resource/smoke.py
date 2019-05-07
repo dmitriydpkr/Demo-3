@@ -4,6 +4,7 @@ import requests
 
 
 class Main(HTTPMethodView):
+    @staticmethod
     def get(self, request):
         return response.json(
             {"message": "Hello world!"}, headers={"Service": "Payments"}, status=200

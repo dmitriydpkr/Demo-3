@@ -6,6 +6,7 @@ from forms import PaymentSchema
 
 
 class PaymentsContract(HTTPMethodView):
+    @staticmethod
     async def get(self, request, contract_number):
         status_contract = await send_request_contracts(contract_number)
 

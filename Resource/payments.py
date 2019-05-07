@@ -7,6 +7,7 @@ from datetime import datetime
 
 
 class Payments(HTTPMethodView):
+    @staticmethod
     async def get(self, request):
         payments = await get_all_payments()
         data = PaymentSchema().dump(payments, many=True)
@@ -14,6 +15,7 @@ class Payments(HTTPMethodView):
 
 
 class PaymentOne(HTTPMethodView):
+    @staticmethod
     async def get(self, request, pay_id):
         payment_one = await get_one_payment(pay_id)
         data = PaymentSchema().dump(payment_one, many=True)
@@ -21,6 +23,7 @@ class PaymentOne(HTTPMethodView):
 
 
 class PaymentPeriod(HTTPMethodView):
+    @staticmethod
     async def get(self, request, start, finish=datetime.now().timestamp()):
         payment_period = await get_payment_period(start, finish)
         data = PaymentSchema().dump(payment_period, many=True)
@@ -28,18 +31,21 @@ class PaymentPeriod(HTTPMethodView):
 
 
 class PaymentsCreate(HTTPMethodView):
+    @staticmethod
     async def post(self, request):
         await create_payment(request.json)
         return text("I have created payment")
 
 
 class PaymentsUpdate(HTTPMethodView):
+    @staticmethod
     async def put(self, request):
         await update_payment(request.json)
         return text("I have updated payment")
 
 
 class PaymentsDelete(HTTPMethodView):
+    @staticmethod
     async def delete(self, request):
         await delete_payment(request.json)
         return text("I have deleted payment")

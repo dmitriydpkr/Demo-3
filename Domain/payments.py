@@ -6,7 +6,7 @@ async def get_all_payments():
     engine = await connect_db()
     raw_data = []
     async with engine.acquire() as conn:
-        async for row in conn.execute(payment.select().where(payment.c.id < 20)):
+        async for row in conn.execute(payment.select().limit(10)):
             raw_data.append(row)
     return raw_data
 
@@ -27,7 +27,7 @@ async def get_payment_period(start, finish):
         query = payment.select().where(payment.c.period > start).where(payment.c.period < finish)
         async for row in conn.execute(query):
             raw_data.append(row)
-    return raw_data
+    return raw_data[:20]
 
 
 async def create_payment(json):

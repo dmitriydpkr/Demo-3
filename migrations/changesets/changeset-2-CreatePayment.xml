@@ -12,10 +12,10 @@
        </not>
       </preConditions>
 		<createTable tableName="payment">
-			<column name="id" type="serial" >
-			  <constraints primaryKey="true" nullable="false"/>
-			</column>
-			<column name="contract_id" type="integer">
+			<column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+			<column name="contract_id" type="uuid">
 			  <constraints nullable="false"/>
 			</column>
 			<column name="amount" type="double precision">
@@ -29,16 +29,6 @@
 			</column>
 			<column name="contributor" type="varchar(50)"/>
 		</createTable>
-
-		<addForeignKeyConstraint baseColumnNames="contract_id"
-				baseTableName="payment"
-				constraintName="contract_id"
-				deferrable="true"
-				initiallyDeferred="true"
-				onDelete="SET NULL"
-				onUpdate="RESTRICT"
-				referencedColumnNames="id"
-				referencedTableName="contract"/>
 	<rollback>
 		<dropTable tableName="payment"/>
 	</rollback>

@@ -10,9 +10,10 @@
            <tableExists schemaName="public" tableName="contract" />
         </not>
       </preConditions>
+
       <createTable tableName="contract">
-        <column name="id" type="serial">
-          <constraints nullable="false" primaryKey="true"/>
+        <column name="id" type="uuid" defaultValueComputed="uuid_generate_v4()">
+                <constraints nullable="false" primaryKey="true"/>
         </column>
         <column name="title" type="varchar(50)">
           <constraints nullable="false"/>

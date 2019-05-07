@@ -8,7 +8,7 @@ from datetime import datetime
 
 class Payments(HTTPMethodView):
     @staticmethod
-    async def get(self, request):
+    async def get(request):
         payments = await get_all_payments()
         data = PaymentSchema().dump(payments, many=True)
         return response.json(data)
@@ -16,7 +16,7 @@ class Payments(HTTPMethodView):
 
 class PaymentOne(HTTPMethodView):
     @staticmethod
-    async def get(self, request, pay_id):
+    async def get(request, pay_id):
         payment_one = await get_one_payment(pay_id)
         data = PaymentSchema().dump(payment_one, many=True)
         return response.json(data)
@@ -24,7 +24,7 @@ class PaymentOne(HTTPMethodView):
 
 class PaymentPeriod(HTTPMethodView):
     @staticmethod
-    async def get(self, request, start, finish=datetime.now().timestamp()):
+    async def get(request, start, finish=datetime.now().timestamp()):
         payment_period = await get_payment_period(start, finish)
         data = PaymentSchema().dump(payment_period, many=True)
         return response.json(data)
@@ -32,20 +32,20 @@ class PaymentPeriod(HTTPMethodView):
 
 class PaymentsCreate(HTTPMethodView):
     @staticmethod
-    async def post(self, request):
+    async def post(request):
         await create_payment(request.json)
         return text("I have created payment")
 
 
 class PaymentsUpdate(HTTPMethodView):
     @staticmethod
-    async def put(self, request):
+    async def put(request):
         await update_payment(request.json)
         return text("I have updated payment")
 
 
 class PaymentsDelete(HTTPMethodView):
     @staticmethod
-    async def delete(self, request):
+    async def delete(request):
         await delete_payment(request.json)
         return text("I have deleted payment")

@@ -1,8 +1,8 @@
 from marshmallow import Schema, fields, ValidationError, validates, post_dump, post_load
 
 
-def must_not_be_blank(data):
-    if not data:
+def must_not_be_blank(value):
+    if not value:
         raise ValidationError("Data not provided.")
 
 
@@ -43,6 +43,6 @@ row = {
 }
 
 try:
-    data = PaymentSchema().load(row)
+    rows = PaymentSchema().load(row)
 except ValidationError as error:
     print(error)

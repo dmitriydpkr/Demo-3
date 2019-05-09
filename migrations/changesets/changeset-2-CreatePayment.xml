@@ -16,10 +16,7 @@
          <column name="amount" type="double precision">
             <constraints nullable="false" />
          </column>
-         <column name="date" type="DATETIME">
-            <constraints nullable="false" />
-         </column>
-         <column name="period" type="integer">
+         <column name="date" type="TIMESTAMP WITH TIME ZONE">
             <constraints nullable="false" />
          </column>
          <column name="contributor" type="varchar(50)" />

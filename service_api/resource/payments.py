@@ -6,11 +6,9 @@ from forms import PaymentSchema
 from datetime import datetime
 from sanic.exceptions import abort
 
-# http://qaru.site/questions/46390/python-flask-how-to-get-parameters-from-a-url
-
 
 class Payments(HTTPMethodView):
-    async def get(self, request, start=0, finish=datetime.now().timestamp()):
+    async def get(self, request, start='2016-06-29', finish=str(datetime.now())):
         contributor = request.args.get("contributor")
         payments = await get_payments(contributor, start, finish)
         data = PaymentSchema().dump(payments, many=True)
@@ -49,4 +47,3 @@ class Payment(HTTPMethodView):
     async def delete(self, request):
         await delete_one(request.json)
         return text("I have deleted payment")
-

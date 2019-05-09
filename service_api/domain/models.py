@@ -19,6 +19,5 @@ payment = Table(
     Column("contributor", VARCHAR(50), nullable=False),
     Column("amount", Float, nullable=False),
     Column("date", DateTime, nullable=False),
-    Column("period", Integer, nullable=False),
     Column("contract_id", String, nullable=False),
 )

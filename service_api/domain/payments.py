@@ -1,19 +1,28 @@
 from database import *
 from service_api.domain.models import payment
+from datetime import datetime
+from dateutil.parser import parse
 
 
 async def get_payments(contributor, start, finish):
 
-    engine = await connect_db()
+    transform_start_day = parse(start).date()
+    transform_finish_day = parse(finish).date()
+    start_day = datetime.min.time()
+    finish_day = datetime.max.time()
+    start = datetime.combine(transform_start_day, start_day)
+    finish = datetime.combine(transform_finish_day, finish_day)
+
     raw_data = []
+    engine = await connect_db()
     async with engine.acquire() as conn:
         if contributor:
             query = payment.select().where(payment.c.contributor == contributor)
         else:
             query = (
                 payment.select()
-                .where(payment.c.period > start)
-                .where(payment.c.period < finish)
+                .where(payment.c.date > start)
+                .where(payment.c.date < finish)
             )
         async for row in conn.execute(query):
             raw_data.append(row)
@@ -37,7 +46,6 @@ async def insert_one(json):
             "amount": json["amount"],
             "date": json["date"],
             "contract_id": json["contract_id"],
-            "period": json["period"],
         }
         await conn.execute(payment.insert().values(values))
 
@@ -51,7 +59,6 @@ async def insert_many(json):
                 "amount": row["amount"],
                 "date": row["date"],
                 "contract_id": row["contract_id"],
-                "period": row["period"],
             }
             await conn.execute(payment.insert().values(values))
 
@@ -66,7 +73,6 @@ async def update_one(json):
                 contributor=json["contributor"],
                 amount=json["amount"],
                 date=json["date"],
-                period=json["period"],
                 contract_id=json["contract_id"],
             )
         )
@@ -83,7 +89,6 @@ async def update_many(json):
                     contributor=row["contributor"],
                     amount=row["amount"],
                     date=row["date"],
-                    period=row["period"],
                     contract_id=row["contract_id"],
                 )
             )

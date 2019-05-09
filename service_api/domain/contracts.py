@@ -7,7 +7,6 @@ contract_ip = "http://0.0.0.0:10201/contract/"
 
 async def send_request_contracts(contract_id):
     try:
-        print(contract_id)
         # r = requests.get(contract_ip + str(contract_id))
         return 200
         # return r.status_code

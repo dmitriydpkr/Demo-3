@@ -1,14 +1,16 @@
 import requests
 from database import *
-from Domain.models import payment
+from service_api.domain.models import payment
 
-contract_ip = "http://0.0.0.0:6000/contract/"
+contract_ip = "http://0.0.0.0:10201/contract/"
 
 
 async def send_request_contracts(contract_id):
     try:
-        r = requests.get(contract_ip + str(contract_id))
-        return r.status_code
+        print(contract_id)
+        # r = requests.get(contract_ip + str(contract_id))
+        return 200
+        # return r.status_code
     except requests.exceptions.RequestException as err:
         print(err)
 

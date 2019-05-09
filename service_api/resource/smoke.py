@@ -3,16 +3,15 @@ from sanic import response
 import requests
 
 
-class Main(HTTPMethodView):
-    @staticmethod
+class Smoke(HTTPMethodView):
     def get(self, request):
         return response.json(
             {"message": "Hello world!"}, headers={"Service": "Payments"}, status=200
         )
 
 
-def registration_sda():
-    sda = "http://0.0.0.0:7000/"
+async def notification():
+    sda = "http://0.0.0.0:31502/"
     data = {
         "message": "Hello SDA, it is Payments!",
         "service": "Payments",

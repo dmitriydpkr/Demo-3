@@ -10,7 +10,7 @@ class PaymentSchema(Schema):
     id = fields.UUID(required=True, validate=must_not_be_blank, nullable=False)
     contributor = fields.String(validate=must_not_be_blank)
     amount = fields.Float(default=0)
-    date = fields.DateTime(default=0, validate=must_not_be_blank)
+    date = fields.DateTime(validate=must_not_be_blank)
     period = fields.Integer(default=0, validate=must_not_be_blank)
     contract_id = fields.UUID(
         required=True,
@@ -24,7 +24,7 @@ class PaymentSchema(Schema):
             raise ValidationError("Amount have wrong format. Only whole numbers.")
 
     @validates("contributor")
-    def validate_amount(self, contributor):
+    def validate_contributor(self, contributor):
         if len(contributor) > 30:
             raise ValidationError("Too much symbols")
 
@@ -34,12 +34,12 @@ class PaymentSchema(Schema):
 
 
 row = {
-    "id": "00643a49-be89-4c49-8376-6148482ac0bd",
+    "id": "d90667f8-7fa8-42c5-b47e-e6a0b8e03fed",
     "contributor": "d9999999",
-    "amount": 31.55,
+    "amount": 28.55,
     "date": "2019-05-04 05:34:05.287928-04",
     "period": 1557168899,
-    "contract_id": "9d2b1d1c-b835-4f8d-9f0a-66d38eb602c0",
+    "contract_id": "00643a49-be89-4c49-8378-6148482ac0bd",
 }
 
 try:

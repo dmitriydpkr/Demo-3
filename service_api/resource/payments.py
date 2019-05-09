@@ -8,7 +8,7 @@ from sanic.exceptions import abort
 
 
 class Payments(HTTPMethodView):
-    async def get(self, request, start='2016-06-29', finish=str(datetime.now())):
+    async def get(self, request, start="2016-06-29", finish=str(datetime.now())):
         contributor = request.args.get("contributor")
         payments = await get_payments(contributor, start, finish)
         data = PaymentSchema().dump(payments, many=True)

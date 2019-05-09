@@ -1,6 +1,6 @@
-import requests
 from database import *
 from service_api.domain.models import payment
+from aiohttp_requests import requests
 
 contract_ip = "http://0.0.0.0:10201/contract/"
 

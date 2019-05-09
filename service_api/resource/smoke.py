@@ -1,6 +1,6 @@
 from sanic.views import HTTPMethodView
 from sanic import response
-import requests
+from aiohttp_requests import requests
 
 
 class Smoke(HTTPMethodView):

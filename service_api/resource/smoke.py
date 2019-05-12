@@ -1,6 +1,8 @@
 from sanic.views import HTTPMethodView
 from sanic import response
 from aiohttp_requests import requests
+import aiohttp
+import logging
 
 
 class Smoke(HTTPMethodView):
@@ -18,20 +20,10 @@ async def notification():
         "host": "0.0.0.0",
         "port": 8001,
     }
-    headers = {"Content-type": "application/json"}
+
     try:
-        requests.post(sda, json=data, headers=headers)
-    except requests.exceptions.ConnectionError:
-        print("Connection error occurred")
-    except requests.exceptions.HTTPError:
-        print("HTTP error occurred")
-    except requests.exceptions.URLRequired:
-        print("A valid URL is required to make a request")
-    except requests.exceptions.TooManyRedirects:
-        print("Too many redirects")
-    except requests.exceptions.ReadTimeout:
-        print("The server did not send any data in the allotted amount of time")
-    except requests.exceptions.RequestException:
-        print(
-            "There was an ambiguous exception that occurred while handling your request"
-        )
+        async with aiohttp.ClientSession() as session:
+            await session.post(sda, json=data)
+
+    except Exception as exc:
+        logging.error(exc)

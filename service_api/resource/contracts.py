@@ -6,9 +6,10 @@ from forms import PaymentSchema
 
 
 class PaymentsContract(HTTPMethodView):
-    async def get(self, request, contract_id):
-        status_contract = await send_request_contracts(contract_id)
-        if status_contract == 200:
+    async def get(self, request):
+        contract_id = request.args.get("id", None)
+        status = await send_request_contracts(contract_id)
+        if status == 200:
             payments = await get_contract(contract_id)
             data = PaymentSchema().dump(payments, many=True)
             return response.json(data)

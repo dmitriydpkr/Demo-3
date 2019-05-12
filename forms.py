@@ -1,19 +1,14 @@
-from marshmallow import Schema, fields, ValidationError, validates, post_dump, post_load
-
-
-def must_not_be_blank(value):
-    if not value:
-        raise ValidationError("Data not provided.")
+from marshmallow import Schema, fields, ValidationError, validates, post_load, validate
 
 
 class PaymentSchema(Schema):
-    id = fields.UUID(required=True, validate=must_not_be_blank, nullable=False)
-    contributor = fields.String(validate=must_not_be_blank)
-    amount = fields.Float(default=0)
-    date = fields.LocalDateTime(validate=must_not_be_blank)
+    id = fields.UUID(required=True, nullable=False, validate=validate.Length(min=1, error="String too short"))
+    contributor = fields.String(validate=validate.Length(min=1, error="String too short"))
+    amount = fields.Float()
+    date = fields.LocalDateTime(validate=validate.Length(min=1, error="String too short"))
     contract_id = fields.UUID(
         required=True,
-        validate=must_not_be_blank,
+        validate=validate.Length(min=36, error="String too short"),
         error_meassages={"required": "Contact ID is required."},
     )
 
@@ -30,17 +25,3 @@ class PaymentSchema(Schema):
     @post_load
     def to_model(self, data):
         return data
-
-
-row = {
-    "id": "d90667f8-7fa8-42c5-b47e-e6a0b8e03fed",
-    "contributor": "d9999999",
-    "amount": 28.55,
-    "date": "2019-05-04 05:34:05.287928-04",
-    "contract_id": "00643a49-be89-4c49-8378-6148482ac0bd",
-}
-
-try:
-    rows = PaymentSchema().load(row)
-except ValidationError as error:
-    print(error)

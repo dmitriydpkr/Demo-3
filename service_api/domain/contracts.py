@@ -1,4 +1,4 @@
-from database import *
+from service_api.database import *
 from service_api.domain.models import payment
 from aiohttp_requests import requests
 from sanic.exceptions import abort

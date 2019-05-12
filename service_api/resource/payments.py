@@ -2,7 +2,7 @@ from sanic import response
 from service_api.domain.payments import *
 from sanic.response import text
 from sanic.views import HTTPMethodView
-from forms import PaymentSchema
+from service_api.forms import PaymentSchema
 
 
 class Payments(HTTPMethodView):

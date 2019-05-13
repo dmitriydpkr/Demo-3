@@ -1,8 +1,7 @@
 from service_api.database import *
 from service_api.domain.models import payment
-from aiohttp_requests import requests
-from sanic.exceptions import abort
 import aiohttp
+import logging
 
 
 contract_ip = "http://0.0.0.0:10201/contract/"
@@ -10,24 +9,27 @@ contract_ip = "http://0.0.0.0:10201/contract/"
 
 async def send_request_contracts(contract_id):
 
-    try:
-        params = {"id": str(contract_id)}
-        async with aiohttp.ClientSession() as session:
-            r = await session.get(contract_ip, json=params)
-            return r.status
+    array_id = []
+    for item in contract_id:
+        params = {"id": str(item)}
+        try:
+            async with aiohttp.ClientSession() as session:
+                r = await session.get(contract_ip, params=params)
+                if r.status == 200:
+                    array_id.append(item)
+        except Exception as exc:
+            logging.error(exc)
+    return array_id
 
-    except requests.exceptions.RequestException as err:
-        print(err)
 
-
-async def get_contract(contract_number):
-    if len(contract_number) != 36:
-        abort(400, "invalid contract id")
+async def get_contracts(contracts):
     engine = await connect_db()
     raw_data = []
+    query = payment.select().where(payment.c.contract_id.in_(contracts))
     async with engine.acquire() as conn:
-        async for row in conn.execute(
-            payment.select().where(payment.c.contract_id == contract_number)
-        ):
+        selected_rows = await conn.execute(query)
+        async for row in selected_rows:
             raw_data.append(row)
     return raw_data
+
+

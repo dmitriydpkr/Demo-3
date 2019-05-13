@@ -7,11 +7,11 @@ from service_api.forms import PaymentSchema
 
 class PaymentsContract(HTTPMethodView):
     async def get(self, request):
-        contract_id = request.args.get("id", None)
-        status = await send_request_contracts(contract_id)
-        if status == 200:
-            payments = await get_contract(contract_id)
+        contract_id = request.args.get("id", '').replace(' ', '').split(',')
+        check_contracts = await send_request_contracts(contract_id)
+        if check_contracts:
+            payments = await get_contracts(check_contracts)
             data = PaymentSchema().dump(payments, many=True)
             return response.json(data)
         else:
-            return text("Contract not founded")
+            return text("Contracts not founded")

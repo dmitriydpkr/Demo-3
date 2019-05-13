@@ -34,7 +34,7 @@ async def get_response(fields, payment_id, contributor, start, finish, amount_mi
         )
 
     raw_data = await filter_payments(query)
-    return raw_data[:5]
+    return raw_data
 
 
 async def get_transform_date_start(start_period):
@@ -49,24 +49,11 @@ async def get_transform_date_finish(end_period):
     return finish
 
 
-async def get_array(raw_data):
-    array = raw_data.replace(' ', '').split(',')
-    list_value = []
-    for i in array:
-        list_value.append(i)
-    return list_value
-
-
 async def get_attributes_from_url(request):
     columns_payment = "id, amount, date, contributor, contract_id"
-    fields = await get_array(request.args.get("fields", columns_payment))
-
-    payment_id = request.args.get("id", '')
-    payment_id = await get_array(payment_id)
-
-    contributor = request.args.get("contributor", '')
-    contributor = await get_array(contributor)
-
+    fields = request.args.get("fields", columns_payment).replace(' ', '').split(',')
+    payment_id = request.args.get("id", '').replace(' ', '').split(',')
+    contributor = request.args.get("contributor", '').replace(' ', '').split(',')
     amount_min = request.args.get("amount_min", 0)
     amount_max = request.args.get("amount_max", 10 ** 10)
     start_period = request.args.get("start_period", "2016-06-29")
@@ -110,9 +97,8 @@ async def update(json):
 async def delete(request):
     engine = await connect_db()
     async with engine.acquire() as conn:
-        payment_id = request.args.get("id", '')
-        payment_id = await get_array(payment_id)
-        for i in payment_id:
-            await conn.execute(payment.delete().where(payment.c.id == i))
+        payment_id = request.args.get("id", '').replace(' ', '').split(',')
+        for item in payment_id:
+            await conn.execute(payment.delete().where(payment.c.id == item))
 
 

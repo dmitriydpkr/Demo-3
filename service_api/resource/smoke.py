@@ -14,16 +14,16 @@ class Smoke(HTTPMethodView):
 
 async def notification():
     sda = "http://0.0.0.0:31502/"
+    parameters = '?name=Payments&host=0.0.0.0&port: 8001'
     data = {
         "message": "Hello SDA, it is Payments!",
         "service": "Payments",
         "host": "0.0.0.0",
         "port": 8001,
     }
-
     try:
         async with aiohttp.ClientSession() as session:
-            await session.post(sda, json=data)
+            await session.post(sda, data=parameters)
 
     except Exception as exc:
         logging.error(exc)

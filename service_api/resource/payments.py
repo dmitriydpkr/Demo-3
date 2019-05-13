@@ -20,12 +20,7 @@ class Payments(HTTPMethodView):
         return text("I have updated payment")
 
     async def delete(self, request):
-        await delete(request.json)
+        await delete(request)
         return text("I have deleted payment")
 
 
-class PaymentsJSON(HTTPMethodView):
-    async def post(self, request):
-        payments = await get_attributes_from_json(request.json)
-        data = PaymentSchema().dump(payments, many=True)
-        return response.json(data)

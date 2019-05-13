@@ -4,15 +4,12 @@ from service_api.resource.smoke import *
 from sanic import Sanic
 
 
-
 app = Sanic()
 
 app.add_route(Smoke.as_view(), "/")
 app.add_route(Smoke.as_view(), "/smoke")
 app.add_route(Payments.as_view(), "payments/")  # PUT, POST, GET, DELETE
 
-app.add_route(PaymentsJSON.as_view(), "payments/json")
-
-app.add_route(PaymentsContract.as_view(), "contract/")  # GET
+app.add_route(PaymentsContract.as_view(), "payments/contract/")  # GET
 
 

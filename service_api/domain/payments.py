@@ -68,7 +68,7 @@ async def get_attributes_from_url(request):
 async def create(json):
     engine = await connect_db()
     async with engine.acquire() as conn:
-        for row in json:
+        for row in json.get('insert'):
             values = {
                 "contributor": row["contributor"],
                 "amount": row["amount"],
@@ -81,7 +81,7 @@ async def create(json):
 async def update(json):
     engine = await connect_db()
     async with engine.acquire() as conn:
-        for row in json:
+        for row in json.get('update'):
             await conn.execute(
                 payment.update()
                 .where(payment.c.id == row["id"])

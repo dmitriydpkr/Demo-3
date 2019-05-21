@@ -12,4 +12,3 @@ app.add_route(Payments.as_view(), "payments/")  # PUT, POST, GET, DELETE
 
 app.add_route(PaymentsContract.as_view(), "payments/contract/")  # GET
 
-

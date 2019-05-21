@@ -1,29 +1,34 @@
 from sanic.views import HTTPMethodView
 from sanic import response
-from aiohttp_requests import requests
 import aiohttp
 import logging
+from config import *
 
 
 class Smoke(HTTPMethodView):
     def get(self, request):
         return response.json(
-            {"message": "Hello world!"}, headers={"Service": "Payments"}, status=200
+            {"message": "Hello world!"}, headers={"Service": SERVICE_NAME}, status=200
+        )
+
+    def post(self, request):
+        return response.json(
+            {"message": "Hello world!"}, headers={"Service": SERVICE_NAME}, status=200
         )
 
 
 async def notification():
-    sda = "http://0.0.0.0:31502/"
-    parameters = '?name=Payments&host=0.0.0.0&port: 8001'
     data = {
-        "message": "Hello SDA, it is Payments!",
-        "service": "Payments",
-        "host": "0.0.0.0",
-        "port": 8001,
+        "name": SERVICE_NAME,
+        "host": SERVICE_HOST,
+        "port": SERVICE_PORT,
     }
     try:
         async with aiohttp.ClientSession() as session:
-            await session.post(sda, data=parameters)
+            await session.post(f'{SDA_HOST}:{SDA_PORT}', params=data)
 
     except Exception as exc:
         logging.error(exc)
+
+
+

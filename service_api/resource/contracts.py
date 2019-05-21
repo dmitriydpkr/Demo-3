@@ -8,7 +8,8 @@ from service_api.forms import PaymentSchema
 class PaymentsContract(HTTPMethodView):
     async def get(self, request):
         contract_id = request.args.get("id", '').replace(' ', '').split(',')
-        check_contracts = await send_request_contracts(contract_id)
+        contracts_url = await get_service_contracts()
+        check_contracts = await send_request_contracts(contracts_url, contract_id)
         if check_contracts:
             payments = await get_contracts(check_contracts)
             data = PaymentSchema().dump(payments, many=True)

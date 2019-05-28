@@ -4,4 +4,4 @@ from config import *
 
 if __name__ == "__main__":
     app.add_task(notification())
-    app.run(host=SERVICE_HOST, port=SERVICE_PORT, debug=True)
+    app.run(host=SERVICE_HOST, port=SERVICE_PORT, debug=False)

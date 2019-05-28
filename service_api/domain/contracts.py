@@ -30,7 +30,7 @@ async def send_request_contracts(contracts_url, contract_id):
         try:
             async with aiohttp.ClientSession() as session:
                 r = await session.get(contracts_url, params=params)
-                if r.status == 200:
+                if r.status == 'OK':
                     array_id.append(item)
         except Exception as exc:
             logging.error(exc)

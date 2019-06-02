@@ -264,31 +264,32 @@ async def check_json_values(json):
         return False
 
 
+async def get_json_ids(request):
+    json_ids = []
+    for row in request.json:
+        json_ids.append(row['id'])
+    return json_ids
+
+
 async def create_payments(json):
-    check_values = await check_json_values(json)
+    engine = await connect_db()
+    async with engine.acquire() as conn:
+        new_rows = []
+        before_insert = await conn.execute("SELECT COUNT(*) FROM payment;")
+        get_count_rows = await before_insert.fetchone()
+        for row in json:
+            values = {
+                "contributor": row["contributor"],
+                "amount": row["amount"],
+                "date": row["date"],
+                "contract_id": row["contract_id"],
+            }
+            await conn.execute(payment.insert().values(values))
+        after_insert = await conn.execute("SELECT * FROM payment;")
+        async for s in after_insert:
+            new_rows.append(s)
 
-    if check_values:
-        engine = await connect_db()
-        async with engine.acquire() as conn:
-            new_rows = []
-            before_insert = await conn.execute("SELECT COUNT(*) FROM payment;")
-            get_count_rows = await before_insert.fetchone()
-            for row in json:
-                values = {
-                    "contributor": row["contributor"],
-                    "amount": row["amount"],
-                    "date": row["date"],
-                    "contract_id": row["contract_id"],
-                }
-                await conn.execute(payment.insert().values(values))
-
-            after_insert = await conn.execute("SELECT * FROM payment;")
-            async for s in after_insert:
-                new_rows.append(s)
-
-        return new_rows[int(get_count_rows[0]) :]
-    else:
-        return 404
+    return new_rows[int(get_count_rows[0]) :]
 
 
 async def check_values_in_db(values, column_table):
@@ -296,7 +297,6 @@ async def check_values_in_db(values, column_table):
     async with engine.acquire() as conn:
         checked_values = []
         for value in values:
-
             select_by_id = await conn.execute(
                 payment.select().where(column_table == value)
             )
@@ -305,7 +305,6 @@ async def check_values_in_db(values, column_table):
                 checked_values.append(get_row[0])
             else:
                 logging.error(f'Value: "{value}" is not founded in database.')
-
     if len(checked_values) == len(values):
         return True
     else:
@@ -313,39 +312,30 @@ async def check_values_in_db(values, column_table):
 
 
 async def update_payments(json):
-
-    check_values = await check_json_values(json)
-    if check_values:
-        updated_id = []
-        for row in json:
-            updated_id.append(row["id"])
-        if await check_values_in_db(updated_id, payment.c.id):
-            engine = await connect_db()
-            async with engine.acquire() as conn:
-                for row in json:
-                    await conn.execute(
-                        payment.update()
-                        .where(payment.c.id == row["id"])
-                        .values(
-                            contributor=row["contributor"],
-                            amount=row["amount"],
-                            date=row["date"],
-                            contract_id=row["contract_id"],
-                        )
+    try:
+        payment_ids = []
+        engine = await connect_db()
+        async with engine.acquire() as conn:
+            for row in json:
+                await conn.execute(
+                    payment.update()
+                    .where(payment.c.id == row["id"])
+                    .values(
+                        contributor=row["contributor"],
+                        amount=row["amount"],
+                        date=row["date"],
+                        contract_id=row["contract_id"],
                     )
-        return updated_id
-    else:
+                )
+                payment_ids.append(row["id"])
+        return payment_ids
+    except Exception as error:
+        logging.error(f'{error}. Not updated')
         return 404
 
 
 async def update_payment_by_id(json, pay_id):
-    check_value = True
-    check_id = await validate_id([pay_id])
-    if check_id:
-        check_value = await check_values_in_db([pay_id], payment.c.id)
-    else:
-        check_value = False
-    if check_value:
+    try:
         engine = await connect_db()
         async with engine.acquire() as conn:
             query = await conn.execute(
@@ -359,19 +349,13 @@ async def update_payment_by_id(json, pay_id):
                 )
             )
         return True
-    else:
-        return False
+    except Exception as error:
+        logging.error(f'{error}. Not updated')
+        return 404
 
 
 async def delete_payment_by_id(request, pay_id):
-    check_value = True
-    check_id = await validate_id([pay_id])
-    if check_id:
-        check_value = await check_values_in_db([pay_id], payment.c.id)
-    else:
-        check_value = False
-
-    if check_value:
+    try:
         engine = await connect_db()
         async with engine.acquire() as conn:
             await conn.execute(payment.delete().where(payment.c.id == pay_id))
@@ -380,29 +364,26 @@ async def delete_payment_by_id(request, pay_id):
                 logging.info(f'Values: "{pay_id}" is deleted from database.')
             else:
                 logging.error(f'Values: "{pay_id}" is not deleted from database.')
-        return 200
-    else:
+        return True
+    except Exception as error:
+        logging.error(f'{error}. Not updated')
         return 404
 
 
-async def delete_payments(request):
-    payment_ids = request.args.get("id", "").replace(" ", "").split(",")
-    check_id = await validate_id(payment_ids)
-    ids = []
-    if check_id:
-        for pay_id in payment_ids:
-            ids.append(pay_id)
+async def delete_payments(payment_ids):
+    deleted_ids = []
+    engine = await connect_db()
+    async with engine.acquire() as conn:
+        for item in payment_ids:
+            await conn.execute(payment.delete().where(payment.c.id == item))
+            check_value = await check_values_in_db([item], payment.c.id)
+            if not check_value:
+                logging.info(f'Values: "{item}" is deleted from database.')
+                deleted_ids.append(item)
+            else:
+                logging.error(f'Values: "{item}" is not deleted from database.')
 
-    if check_id and await check_values_in_db(ids, payment.c.id):
-        engine = await connect_db()
-        async with engine.acquire() as conn:
-            for item in payment_ids:
-                await conn.execute(payment.delete().where(payment.c.id == item))
-                check_value = await check_values_in_db([item], payment.c.id)
-                if not check_value:
-                    logging.info(f'Values: "{item}" is deleted from database.')
-                else:
-                    logging.error(f'Values: "{item}" is not deleted from database.')
-            return ids
+    if len(payment_ids) == len(deleted_ids):
+        return deleted_ids
     else:
         return 404

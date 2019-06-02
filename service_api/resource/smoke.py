@@ -18,17 +18,10 @@ class Smoke(HTTPMethodView):
 
 
 async def notification():
-    data = {
-        "name": SERVICE_NAME,
-        "host": SERVICE_HOST,
-        "port": SERVICE_PORT,
-    }
+    data = {"name": SERVICE_NAME, "host": SERVICE_HOST, "port": SERVICE_PORT}
     try:
         async with aiohttp.ClientSession() as session:
-            await session.post(f'{SDA_HOST}:{SDA_PORT}', params=data)
+            await session.post(f"{SDA_HOST}:{SDA_PORT}", params=data)
 
     except Exception as exc:
         logging.error(exc)
-
-
-

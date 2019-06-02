@@ -2,10 +2,18 @@ from marshmallow import Schema, fields, ValidationError, validates, post_load, v
 
 
 class PaymentSchema(Schema):
-    id = fields.UUID(required=True, nullable=False, validate=validate.Length(min=1, error="String too short"))
-    contributor = fields.String(validate=validate.Length(min=1, error="String too short"))
+    id = fields.UUID(
+        required=True,
+        nullable=False,
+        validate=validate.Length(min=1, error="String too short"),
+    )
+    contributor = fields.String(
+        validate=validate.Length(min=1, error="String too short")
+    )
     amount = fields.Float()
-    date = fields.LocalDateTime(validate=validate.Length(min=1, error="String too short"))
+    date = fields.LocalDateTime(
+        validate=validate.Length(min=1, error="String too short")
+    )
     contract_id = fields.UUID(
         required=True,
         validate=validate.Length(min=36, error="String too short"),

@@ -20,8 +20,7 @@ async def get_service_contracts():
             return url
     except Exception as exc:
         logging.error(f" {exc} ")
-        return "url CONTRACTS"
-        # return 404
+        return 404
 
 
 async def send_request_contracts(contracts_url, contract_id):

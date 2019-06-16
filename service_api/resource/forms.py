@@ -11,7 +11,7 @@ class PaymentSchema(Schema):
         validate=validate.Length(min=1, error="String too short")
     )
     amount = fields.Float()
-    date = fields.LocalDateTime(
+    date = fields.Date(
         validate=validate.Length(min=1, error="String too short")
     )
     contract_id = fields.UUID(

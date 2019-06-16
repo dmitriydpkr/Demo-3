@@ -4,7 +4,7 @@ from config import *
 
 
 async def connect_db():
-    logging.info("Connect to database")
+    logging.info("Connect to database. INFO")
     engine = await create_engine(
         user=DB_USER,
         database=DEFAULT_DB,

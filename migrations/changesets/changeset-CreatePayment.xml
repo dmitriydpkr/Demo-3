@@ -16,7 +16,7 @@
          <column name="amount" type="double precision">
             <constraints nullable="false" />
          </column>
-         <column name="date" type="TIMESTAMP WITH TIME ZONE">
+         <column name="date" type="date">
             <constraints nullable="false" />
          </column>
          <column name="contributor" type="varchar(50)" />

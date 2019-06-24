@@ -152,7 +152,7 @@ async def combine_query_to_db(url_raw):
 
 
 async def query_to_db(query):
-    print(query)
+    #print(query)
     try:
         engine = await connect_db()
         raw_data = []
@@ -163,7 +163,7 @@ async def query_to_db(query):
         if len(raw_data) < 1:
             logging.error(f"In database is not such data. ERROR")
             return 404
-        print(raw_data)
+        #print(raw_data)
         return raw_data
 
     except psycopg2.ProgrammingError:

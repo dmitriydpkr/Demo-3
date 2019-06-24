@@ -10,7 +10,7 @@ from service_api.resource.payments import get_filter_urls, parse_filter, parse_o
 
 class PaymentsContract(HTTPMethodView):
     async def get(self, request):
-
+        print(request.url)
         url_conditions = await get_filter_urls(request.url)
 
         if url_conditions != 404:
@@ -25,7 +25,7 @@ class PaymentsContract(HTTPMethodView):
                     async with aiohttp.ClientSession() as session:
 
                         data = f"{contracts_url}?filter=id%20{operator}%20{values}"
-                        print(data, 'here')
+
                         response_json = await session.get(data)
                         get_json = await response_json.json()
                         contracts_ids = await get_json_ids(get_json, 'id')
@@ -42,4 +42,5 @@ class PaymentsContract(HTTPMethodView):
                             return response.json(validate_data)
                 except Exception as exc:
                     logging.error('Connection to service contracts refused. ERROR')
-        return text("Contract url is not correct")
+
+        return response.json("Contract url is not correct")

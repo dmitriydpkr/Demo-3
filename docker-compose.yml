@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  
+  sanic:
+    build: ./sanic
+    ports:
+      - 8002:8002
+    links:
+     - dbpayments
+    networks: 
+      - backend
+
+  dbpayments:
+    image: "postgres:10.8"
+    restart: always
+    environment:
+      POSTGRES_DB: payment
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      PGDATA: /var/lib/postgresql/data/pgdata    
+    ports:
+      - 2347:5432   
+    volumes:
+      - ./databases:/var/lib/postgresql/data/pgdata
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql    
+    networks: 
+      - backend
+  adminer:
+    image: "adminer"
+    restart: always
+    ports:
+      - 1122:8080
+
+networks:
+  backend:
+    driver: bridge
